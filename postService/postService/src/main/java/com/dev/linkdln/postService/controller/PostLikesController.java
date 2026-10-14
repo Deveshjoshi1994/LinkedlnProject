@@ -12,7 +12,7 @@ public class PostLikesController {
 
     private final PostLikeService postLikeService;
 
-    @PostMapping("/{postId")
+    @PostMapping("/{postId}")
     public ResponseEntity<Void> likePost(@PathVariable Long postId) {
         postLikeService.likePost(postId);
         return ResponseEntity.noContent().build();

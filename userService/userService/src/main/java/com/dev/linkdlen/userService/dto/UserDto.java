@@ -1,0 +1,9 @@
+package com.dev.linkdlen.userService.dto;
+
+import lombok.Data;
+
+@Data
+public class UserDto {
+    private Long id;
+    private String name, email;
+}

@@ -1,6 +1,5 @@
 package com.dev.linkdln.postService.exception;
 
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,7 +14,7 @@ public class GlobalExceptionHandler {
 
     }
 
-    @ExceptionHandler(com.dev.linkdln.postService.exception.BadRequestException.class)
+    @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiError> handleBandRequestException(BadRequestException ex) {
         ApiError apiError = new ApiError(ex.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);

@@ -1,4 +1,4 @@
-package com.dev.user.service.userService;
+package com.dev.linkdlen.userService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
