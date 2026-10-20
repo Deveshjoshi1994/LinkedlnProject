@@ -1,5 +1,8 @@
 package com.dev.linkdln.postService.service;
 
+import com.dev.linkdln.postService.auth.AuthContextHolder;
+import com.dev.linkdln.postService.client.ConnectionsServiceClient;
+import com.dev.linkdln.postService.dto.PersonDto;
 import com.dev.linkdln.postService.dto.PostCreateRequestDto;
 import com.dev.linkdln.postService.dto.PostDto;
 import com.dev.linkdln.postService.entity.Post;
@@ -22,6 +25,9 @@ public class PostService {
 
     private final ModelMapper modelMapper;
 
+    private final ConnectionsServiceClient connectionsServiceClient;
+
+
     public PostDto createPost(PostCreateRequestDto postCreateRequestDto, Long userId) {
         log.info("Creating Post for user with id: {}", userId);
         Post post = modelMapper.map(postCreateRequestDto, Post.class);
@@ -34,7 +40,14 @@ public class PostService {
 
     public PostDto getPostById(Long postId) {
         log.info("Getting the post with ID: {}", postId);
+
+        Long userId = AuthContextHolder.getCurrentUserId();
+
+
+        List<PersonDto> personDtoList = connectionsServiceClient.getFirstDegreeConnections(userId);
+
         Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post Not Found " + postId));
+
         return modelMapper.map(post, PostDto.class);
     }
 

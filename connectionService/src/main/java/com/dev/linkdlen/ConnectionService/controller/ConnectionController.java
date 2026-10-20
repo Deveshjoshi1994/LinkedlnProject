@@ -3,6 +3,7 @@ package com.dev.linkdlen.ConnectionService.controller;
 import com.dev.linkdlen.ConnectionService.entity.Person;
 import com.dev.linkdlen.ConnectionService.service.ConnectionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/core")
 @RequiredArgsConstructor
+@Slf4j
 public class ConnectionController {
 
     private final ConnectionService connectionService;
@@ -21,6 +23,7 @@ public class ConnectionController {
     @GetMapping("/{userId}/first-degree")
     public ResponseEntity<Person> getFirstDegreeConnections(@PathVariable Long userId) {
 
+        log.info("User id is {}", userId);
         List<Person> personList = connectionService.getFirstDegreeConnectionsOfUser(userId);
 
         return ResponseEntity.ok((Person) personList);
