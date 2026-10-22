@@ -13,19 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/core")
+@RequestMapping("/connections")
 @RequiredArgsConstructor
 @Slf4j
 public class ConnectionController {
 
     private final ConnectionService connectionService;
 
-    @GetMapping("/{userId}/first-degree")
-    public ResponseEntity<Person> getFirstDegreeConnections(@PathVariable Long userId) {
-
+    @GetMapping("/core/{userId}/first-degree")
+    public ResponseEntity<List<Person>> getFirstDegreeConnections(@PathVariable Long userId) {
         log.info("User id is {}", userId);
         List<Person> personList = connectionService.getFirstDegreeConnectionsOfUser(userId);
-
-        return ResponseEntity.ok((Person) personList);
+        return ResponseEntity.ok(personList); // Return the list directly without casting!
     }
 }
