@@ -1,6 +1,8 @@
 package com.dev.linkdln.postService.service;
 
+import com.dev.linkdln.postService.auth.AuthContextHolder;
 import com.dev.linkdln.postService.client.ConnectionsServiceClient;
+import com.dev.linkdln.postService.client.UploaderServiceClient;
 import com.dev.linkdln.postService.dto.PersonDto;
 import com.dev.linkdln.postService.dto.PostCreateRequestDto;
 import com.dev.linkdln.postService.dto.PostDto;
@@ -11,8 +13,10 @@ import com.dev.linkdln.postService.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,11 +34,21 @@ public class PostService {
 
     private final KafkaTemplate<Long, PostCreated> postCreatedKafkaTemplate;
 
+    private final UploaderServiceClient uploaderServiceClient;
 
-    public PostDto createPost(PostCreateRequestDto postCreateRequestDto, Long userId) {
+    public PostDto createPost(PostCreateRequestDto postCreateRequestDto, MultipartFile file) {
+
+        Long userId = AuthContextHolder.getCurrentUserId();
         log.info("Creating Post for user with id: {}", userId);
+
+        ResponseEntity<String> imageUrl = uploaderServiceClient.uploadFile(file);
+
+
         Post post = modelMapper.map(postCreateRequestDto, Post.class);
         post.setUserId(userId);
+
+        post.setImageUrl(imageUrl.getBody());
+
         post = postRepository.save(post);
 
         List<PersonDto> personDtoList = connectionsServiceClient.getFirstDegreeConnections(userId);
